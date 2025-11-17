@@ -1,0 +1,18 @@
+# Configuration Render pour déploiement automatique
+services:
+  - type: web
+    name: trello-assistant-backend
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: TRELLO_API_KEY
+        sync: false
+      - key: TRELLO_API_TOKEN
+        sync: false
+      - key: TRELLO_DEFAULT_BOARD_ID
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      # PORT est automatiquement défini par Render, pas besoin de le configurer
+
