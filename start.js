@@ -75,16 +75,35 @@ if (!entryPoint) {
     } catch (e) {}
   }
   
-  // Chercher dans le répertoire actuel et le parent
-  findDist(process.cwd());
-  if (!entryPoint) {
+  // Chercher dans le répertoire actuel et les parents
+  console.error(`\n🔍 Recherche récursive de dist/index.js...`);
+  const searchDirs = [
+    process.cwd(),
+    path.join(process.cwd(), '..'),
+    path.join(process.cwd(), '..', '..'),
+    '/opt/render/project',
+    '/opt/render/project/src',
+  ];
+  
+  for (const dir of searchDirs) {
     try {
-      findDist(path.join(process.cwd(), '..'));
-    } catch (e) {}
+      if (fs.existsSync(dir)) {
+        console.error(`   Recherche dans: ${dir}`);
+        findDist(dir);
+        if (entryPoint) break;
+      }
+    } catch (e) {
+      console.error(`   Erreur lors de la recherche dans ${dir}: ${e.message}`);
+    }
   }
   
   if (!entryPoint) {
-    console.error(`\n❌ Impossible de trouver dist/index.js. Le build a-t-il réussi ?`);
+    console.error(`\n❌ Impossible de trouver dist/index.js.`);
+    console.error(`\n💡 Vérifications à faire:`);
+    console.error(`   1. Les logs de build montrent-ils que le build a réussi ?`);
+    console.error(`   2. Le répertoire dist/ existe-t-il quelque part ?`);
+    console.error(`   3. TypeScript est-il bien installé (devDependencies) ?`);
+    console.error(`   4. Le buildCommand dans render.yaml est-il correct ?`);
     process.exit(1);
   }
 }
