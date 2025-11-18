@@ -3,7 +3,7 @@ services:
   - type: web
     name: trello-assistant-backend
     env: node
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && echo "=== Build TypeScript ===" && npm run build && echo "=== Vérification du build ===" && pwd && ls -la && echo "=== Contenu de dist/ ===" && ls -la dist/ 2>&1 || echo "dist/ n'existe pas" && echo "=== Vérification dist/index.js ===" && test -f dist/index.js && echo "✅ dist/index.js existe" || (echo "❌ dist/index.js n'existe pas" && exit 1)
     startCommand: node start.js
     envVars:
       - key: TRELLO_API_KEY
