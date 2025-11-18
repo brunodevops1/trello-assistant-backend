@@ -8,14 +8,16 @@ const path = require('path');
 const fs = require('fs');
 
 // Chemins possibles (ordre important - tester d'abord les plus probables)
+// Le répertoire de travail sur Render est /opt/render/project/src
 const possiblePaths = [
-  path.join(process.cwd(), 'dist', 'index.js'),
-  path.join('/opt/render/project', 'dist', 'index.js'),
-  path.join(process.cwd(), 'src', 'dist', 'index.js'),
+  path.join(process.cwd(), 'dist', 'index.js'),  // /opt/render/project/src/dist/index.js
+  path.join(process.cwd(), '..', 'dist', 'index.js'),  // /opt/render/project/dist/index.js
   path.join('/opt/render/project', 'src', 'dist', 'index.js'),
+  path.join('/opt/render/project', 'dist', 'index.js'),
   // Chemins alternatifs
   path.resolve(__dirname, 'dist', 'index.js'),
   path.resolve(__dirname, '..', 'dist', 'index.js'),
+  path.resolve(__dirname, '..', '..', 'dist', 'index.js'),
 ];
 
 let entryPoint = null;
@@ -62,6 +64,8 @@ if (!entryPoint) {
             const indexPath = path.join(fullPath, 'index.js');
             if (fs.existsSync(indexPath)) {
               console.error(`   ✅ Trouvé: ${indexPath}`);
+              // Si on trouve dist/, l'utiliser directement
+              entryPoint = indexPath;
             }
           } else if (stat.isDirectory() && !file.startsWith('.') && !file.includes('node_modules')) {
             findDist(fullPath, depth + 1);
@@ -70,9 +74,19 @@ if (!entryPoint) {
       }
     } catch (e) {}
   }
-  findDist(process.cwd());
   
-  process.exit(1);
+  // Chercher dans le répertoire actuel et le parent
+  findDist(process.cwd());
+  if (!entryPoint) {
+    try {
+      findDist(path.join(process.cwd(), '..'));
+    } catch (e) {}
+  }
+  
+  if (!entryPoint) {
+    console.error(`\n❌ Impossible de trouver dist/index.js. Le build a-t-il réussi ?`);
+    process.exit(1);
+  }
 }
 
 // Démarrer l'application
