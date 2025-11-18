@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trello Assistant - ChatGPT</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 800px;
+            width: 100%;
+            padding: 40px;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .messages {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .message {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .message.user {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .message.assistant {
+            background: #f1f8e9;
+            color: #558b2f;
+        }
+        
+        .message.error {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .message.loading {
+            background: #fff3e0;
+            color: #e65100;
+            font-style: italic;
+        }
+        
+        .config {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .config h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .config input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
+        }
+        
+        .config label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 Trello Assistant</h1>
+        <p class="subtitle">Gérez vos tâches Trello avec ChatGPT</p>
+        
+        <div class="input-group">
+            <input 
+                type="text" 
+                id="userInput" 
+                placeholder="Ex: Ajoute une tâche 'Préparer le budget' dans 'Nouvelles taches' pour vendredi"
+                onkeypress="if(event.key === 'Enter') sendMessage()"
+            >
+            <button id="sendBtn" onclick="sendMessage()">Envoyer</button>
+        </div>
+        
+        <div class="messages" id="messages"></div>
+        
+        <div class="config">
+            <h3>⚙️ Configuration</h3>
+            <label>OpenAI API Key:</label>
+            <input 
+                type="password" 
+                id="apiKey" 
+                placeholder="sk-..."
+                value=""
+            >
+            <label>Backend URL (optionnel):</label>
+            <input 
+                type="text" 
+                id="backendUrl" 
+                placeholder="https://trello-assistant-backend.onrender.com"
+                value="https://trello-assistant-backend.onrender.com"
+            >
+        </div>
+    </div>
+    
+    <script>
+        const BACKEND_URL = 'https://trello-assistant-backend.onrender.com';
+        
+        function addMessage(text, type = 'assistant') {
+            const messagesDiv = document.getElementById('messages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = text;
+            messagesDiv.appendChild(messageDiv);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const apiKey = document.getElementById('apiKey').value;
+            const backendUrl = document.getElementById('backendUrl').value || BACKEND_URL;
+            const userMessage = input.value.trim();
+            
+            if (!userMessage) return;
+            if (!apiKey) {
+                addMessage('❌ Veuillez configurer votre OpenAI API Key', 'error');
+                return;
+            }
+            
+            // Afficher le message utilisateur
+            addMessage(`💬 ${userMessage}`, 'user');
+            input.value = '';
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Envoi...';
+            
+            try {
+                addMessage('📥 Récupération des tools...', 'loading');
+                
+                // 1. Récupérer les tools
+                const toolsResponse = await fetch(`${backendUrl}/assistant/tools`);
+                const toolsData = await toolsResponse.json();
+                
+                addMessage(`✅ ${toolsData.tools.length} tools disponibles`, 'assistant');
+                addMessage('🤖 Appel à OpenAI...', 'loading');
+                
+                // 2. Appeler OpenAI
+                const openaiResponse = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${apiKey}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4-turbo-preview',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: toolsData.system_prompt,
+                            },
+                            {
+                                role: 'user',
+                                content: userMessage,
+                            },
+                        ],
+                        tools: toolsData.tools,
+                        tool_choice: 'auto',
+                    }),
+                });
+                
+                const openaiData = await openaiResponse.json();
+                const assistantMessage = openaiData.choices[0].message;
+                
+                // 3. Si des tool_calls sont générés, les exécuter
+                if (assistantMessage.tool_calls && assistantMessage.tool_calls.length > 0) {
+                    addMessage(`🔧 ${assistantMessage.tool_calls.length} action(s) détectée(s)`, 'assistant');
+                    
+                    for (const toolCall of assistantMessage.tool_calls) {
+                        const args = JSON.parse(toolCall.function.arguments);
+                        addMessage(`   → ${toolCall.function.name}(${JSON.stringify(args)})`, 'assistant');
+                    }
+                    
+                    addMessage('📡 Exécution via le backend...', 'loading');
+                    
+                    const backendResponse = await fetch(`${backendUrl}/assistant/trello`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            tool_calls: assistantMessage.tool_calls,
+                        }),
+                    });
+                    
+                    const backendData = await backendResponse.json();
+                    
+                    if (backendData.success) {
+                        backendData.results.forEach(result => {
+                            if (result.success) {
+                                addMessage(`✅ ${result.message}`, 'assistant');
+                            } else {
+                                addMessage(`❌ Erreur: ${result.error}`, 'error');
+                            }
+                        });
+                    } else {
+                        addMessage(`❌ Erreur: ${backendData.error}`, 'error');
+                    }
+                } else {
+                    // Pas de tool_call, juste une réponse textuelle
+                    if (assistantMessage.content) {
+                        addMessage(`💬 ${assistantMessage.content}`, 'assistant');
+                    }
+                }
+            } catch (error) {
+                addMessage(`❌ Erreur: ${error.message}`, 'error');
+                console.error(error);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Envoyer';
+            }
+        }
+        
+        // Charger l'API key depuis le localStorage
+        window.onload = () => {
+            const savedKey = localStorage.getItem('openai_api_key');
+            if (savedKey) {
+                document.getElementById('apiKey').value = savedKey;
+            }
+            
+            // Sauvegarder l'API key quand elle change
+            document.getElementById('apiKey').addEventListener('change', (e) => {
+                localStorage.setItem('openai_api_key', e.target.value);
+            });
+        };
+    </script>
+</body>
+</html>
+
