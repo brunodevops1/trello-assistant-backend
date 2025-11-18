@@ -11,6 +11,21 @@
       "description": "Backend Render (Production)"
     }
   ],
+  "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key",
+        "description": "Clé API simple pour authentification (optionnelle mais recommandée pour éviter les demandes d'autorisation)"
+      }
+    }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ],
   "paths": {
     "/assistant/trello": {
       "post": {

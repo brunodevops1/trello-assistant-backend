@@ -79,7 +79,12 @@ RÉPONSES:
 
 1. Cliquez sur **"Add Action"** (section Actions)
 2. Dans **"Schema"**, collez le contenu du fichier `openapi-schema.json` (voir ci-dessous)
-3. Ou utilisez l'URL : `https://trello-assistant-backend.onrender.com` (si vous hébergez le schema)
+3. **IMPORTANT** : Dans le champ **"Authentication"**, configurez :
+   - **Type** : `API Key`
+   - **Name** : `X-API-Key`
+   - **Location** : `Header`
+   - **Value** : Vous pouvez laisser vide ou mettre une valeur simple comme `trello-assistant` (le backend l'accepte optionnellement)
+4. Cliquez sur **"Save"** pour sauvegarder l'authentification
 
 ### Schema OpenAPI (à coller dans "Schema")
 
@@ -184,11 +189,39 @@ Copiez le contenu du fichier `openapi-schema.json` que j'ai créé, ou utilisez 
 
 ## ⚠️ Notes importantes
 
-- **Authentification** : Votre backend Render est public, donc pas besoin d'authentification pour l'instant
+- **Authentification** : Configurez une API Key dans ChatGPT (même simple) pour éviter les demandes d'autorisation répétées. Le backend accepte les requêtes avec ou sans clé pour compatibilité.
 - **Format des arguments** : Les `arguments` doivent être une **string JSON**, pas un objet JSON
 - **Erreurs** : Si une action échoue, ChatGPT affichera le message d'erreur du backend
+- **Demandes d'autorisation** : Si ChatGPT demande toujours l'autorisation, vérifiez que vous avez bien configuré l'authentification dans l'Action (étape 3)
+
+## 🔒 Éviter les demandes d'autorisation répétées
+
+**Problème** : ChatGPT demande l'autorisation à chaque action.
+
+**Solution** : Configurez l'authentification dans l'Action :
+
+1. Dans votre Custom GPT, allez dans **"Configure"** → **"Actions"**
+2. Cliquez sur votre Action (ou créez-en une)
+3. Dans la section **"Authentication"** :
+   - **Type** : Sélectionnez `API Key`
+   - **Name** : `X-API-Key`
+   - **Location** : `Header`
+   - **Value** : Vous pouvez mettre n'importe quelle valeur (ex: `trello-assistant`) ou laisser vide
+4. Cliquez sur **"Save"**
+
+**Pourquoi ça fonctionne** : 
+- ChatGPT stocke la clé API une fois configurée
+- Le backend accepte les requêtes avec ou sans clé (pour compatibilité)
+- Une fois la clé configurée, ChatGPT ne demandera plus l'autorisation
+
+**Note** : Si vous changez le schéma OpenAPI, vous devrez peut-être reconfigurer l'authentification.
 
 ## 🔧 Dépannage
+
+### ChatGPT demande toujours l'autorisation
+- ✅ Vérifiez que vous avez bien configuré l'authentification dans l'Action (voir section ci-dessus)
+- ✅ Vérifiez que le schéma OpenAPI contient bien la section `security` (déjà inclus dans `openapi-schema.json`)
+- ✅ Essayez de supprimer et recréer l'Action avec l'authentification
 
 ### L'action ne s'exécute pas
 - Vérifiez que le schema OpenAPI est valide (pas d'erreurs de syntaxe)

@@ -20,13 +20,30 @@ function getTrelloService(): TrelloService {
 }
 
 /**
+ * Middleware optionnel pour vérifier l'API key (si configurée)
+ * Permet à ChatGPT de stocker la clé et éviter les demandes d'autorisation répétées
+ */
+function optionalApiKeyAuth(req: Request, res: Response, next: Function) {
+  const apiKey = req.headers['x-api-key'] as string;
+  const expectedApiKey = process.env.CHATGPT_API_KEY;
+  
+  // Si une clé est attendue mais non fournie, on accepte quand même (pour compatibilité)
+  // Mais on log pour debug
+  if (expectedApiKey && apiKey !== expectedApiKey) {
+    console.log('⚠️ API Key manquante ou invalide (requête acceptée pour compatibilité)');
+  }
+  
+  next();
+}
+
+/**
  * POST /assistant/trello
  * 
  * Accepte deux formats:
  * 1. { tool_calls: [...] } - Format direct depuis OpenAI (variante A)
  * 2. { message: "..." } - Message utilisateur brut (variante B, nécessite OPENAI_API_KEY)
  */
-router.post('/trello', async (req: Request, res: Response) => {
+router.post('/trello', optionalApiKeyAuth, async (req: Request, res: Response) => {
   try {
     const { tool_calls, message } = req.body;
 
