@@ -4,7 +4,7 @@ services:
     name: trello-assistant-backend
     env: node
     buildCommand: npm install && npm run build
-    startCommand: node dist/index.js
+    startCommand: node start.js
     envVars:
       - key: TRELLO_API_KEY
         sync: false
