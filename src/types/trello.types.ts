@@ -48,3 +48,14 @@ export interface UpdateDueDateParams {
   due_date: string;
 }
 
+export interface ArchiveTaskParams {
+  board?: string;
+  task_name: string;
+}
+
+export interface MoveTaskParams {
+  board?: string;
+  task_name: string;
+  target_list: string;
+}
+

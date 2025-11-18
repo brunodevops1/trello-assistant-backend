@@ -48,7 +48,7 @@
                           "properties": {
                             "name": {
                               "type": "string",
-                              "enum": ["createTrelloTask", "completeTrelloTask", "updateTrelloDueDate"]
+                              "enum": ["createTrelloTask", "completeTrelloTask", "updateTrelloDueDate", "archiveTrelloTask", "moveTrelloTask"]
                             },
                             "arguments": {"type": "string"}
                           },

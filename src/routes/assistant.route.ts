@@ -148,6 +148,28 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
           });
           break;
 
+        case 'archiveTrelloTask':
+          result = await trelloService.archiveTask(args);
+          results.push({
+            tool_call_id: toolCall.id,
+            function_name: functionName,
+            success: true,
+            message: `Tâche "${result.name}" archivée avec succès`,
+            data: result,
+          });
+          break;
+
+        case 'moveTrelloTask':
+          result = await trelloService.moveTask(args);
+          results.push({
+            tool_call_id: toolCall.id,
+            function_name: functionName,
+            success: true,
+            message: `Tâche "${result.name}" déplacée vers "${args.target_list}"`,
+            data: result,
+          });
+          break;
+
         default:
           results.push({
             tool_call_id: toolCall.id,

@@ -10,6 +10,8 @@ import {
   CreateTaskParams,
   CompleteTaskParams,
   UpdateDueDateParams,
+  ArchiveTaskParams,
+  MoveTaskParams,
 } from '../types/trello.types';
 import {
   TrelloError,
@@ -257,6 +259,55 @@ export class TrelloService {
       }
       throw new TrelloError(
         `Erreur lors de la mise à jour de la date: ${error.message}`,
+        error.response?.status
+      );
+    }
+  }
+
+  /**
+   * Archive une tâche (la ferme sans la supprimer)
+   */
+  async archiveTask(params: ArchiveTaskParams): Promise<TrelloCard> {
+    try {
+      const board = await this.getBoard(params.board);
+      const card = await this.findCardByName(board.id, params.task_name);
+
+      const response = await this.client.put<TrelloCard>(`/cards/${card.id}`, {
+        closed: true,
+      });
+
+      return response.data;
+    } catch (error: any) {
+      if (error instanceof TrelloError) {
+        throw error;
+      }
+      throw new TrelloError(
+        `Erreur lors de l'archivage de la tâche: ${error.message}`,
+        error.response?.status
+      );
+    }
+  }
+
+  /**
+   * Déplace une tâche d'une liste à une autre
+   */
+  async moveTask(params: MoveTaskParams): Promise<TrelloCard> {
+    try {
+      const board = await this.getBoard(params.board);
+      const card = await this.findCardByName(board.id, params.task_name);
+      const targetList = await this.getList(board.id, params.target_list);
+
+      const response = await this.client.put<TrelloCard>(`/cards/${card.id}`, {
+        idList: targetList.id,
+      });
+
+      return response.data;
+    } catch (error: any) {
+      if (error instanceof TrelloError) {
+        throw error;
+      }
+      throw new TrelloError(
+        `Erreur lors du déplacement de la tâche: ${error.message}`,
         error.response?.status
       );
     }

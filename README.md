@@ -7,6 +7,8 @@ Backend pour un assistant Trello utilisant OpenAI Function Calling. Le système 
 - ✅ Créer une tâche dans Trello
 - ✅ Marquer une tâche comme terminée
 - ✅ Modifier la date d'échéance d'une tâche
+- ✅ Archiver une tâche
+- ✅ Déplacer une tâche d'une liste à une autre
 
 ## 🏗️ Architecture
 

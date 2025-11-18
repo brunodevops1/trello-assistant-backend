@@ -8,7 +8,7 @@ require('dotenv').config();
 const axios = require('axios');
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-const BACKEND_URL = process.env.BACKEND_URL || 'http://localhost:3000';
+const BACKEND_URL = process.env.BACKEND_URL || 'https://trello-assistant-backend.onrender.com';
 
 if (!OPENAI_API_KEY) {
   console.error('❌ OPENAI_API_KEY non configurée dans .env');

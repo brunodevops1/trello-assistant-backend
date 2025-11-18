@@ -94,6 +94,59 @@ export const TRELLO_TOOLS: ToolDefinition[] = [
       },
     },
   },
+  {
+    type: 'function',
+    function: {
+      name: 'archiveTrelloTask',
+      description:
+        'Archive une tâche existante dans Trello (la ferme sans la supprimer). Utilise cette fonction quand l\'utilisateur demande d\'archiver, fermer ou supprimer visuellement une tâche.',
+      parameters: {
+        type: 'object',
+        properties: {
+          board: {
+            type: 'string',
+            description:
+              'Le nom ou l\'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié.',
+          },
+          task_name: {
+            type: 'string',
+            description:
+              'Le nom exact de la tâche à archiver. Obligatoire.',
+          },
+        },
+        required: ['task_name'],
+      },
+    },
+  },
+  {
+    type: 'function',
+    function: {
+      name: 'moveTrelloTask',
+      description:
+        'Déplace une tâche existante d\'une liste à une autre dans Trello. Utilise cette fonction quand l\'utilisateur demande de déplacer, transférer ou changer la liste d\'une tâche.',
+      parameters: {
+        type: 'object',
+        properties: {
+          board: {
+            type: 'string',
+            description:
+              'Le nom ou l\'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié.',
+          },
+          task_name: {
+            type: 'string',
+            description:
+              'Le nom exact de la tâche à déplacer. Obligatoire.',
+          },
+          target_list: {
+            type: 'string',
+            description:
+              'Le nom de la liste de destination où déplacer la tâche. Obligatoire.',
+          },
+        },
+        required: ['task_name', 'target_list'],
+      },
+    },
+  },
 ];
 
 /**
@@ -110,15 +163,19 @@ RÈGLES IMPORTANTES:
 1. Quand l'utilisateur demande de créer une tâche, utilise createTrelloTask.
 2. Quand l'utilisateur demande de marquer une tâche comme terminée, utilise completeTrelloTask.
 3. Quand l'utilisateur demande de modifier une date d'échéance, utilise updateTrelloDueDate.
-4. Extrais les informations pertinentes du message utilisateur (titre, date, board, liste).
-5. Pour les dates, convertis-les au format ISO 8601 (ex: "vendredi" -> date du prochain vendredi, "31 janvier" -> "2026-01-31T00:00:00Z").
-6. Si le board ou la liste ne sont pas mentionnés, utilise les valeurs par défaut.
-7. Après chaque action, confirme brièvement ce qui a été fait.
+4. Quand l'utilisateur demande d'archiver, fermer ou supprimer visuellement une tâche, utilise archiveTrelloTask.
+5. Quand l'utilisateur demande de déplacer, transférer ou changer la liste d'une tâche, utilise moveTrelloTask.
+6. Extrais les informations pertinentes du message utilisateur (titre, date, board, liste).
+7. Pour les dates, convertis-les au format ISO 8601 (ex: "vendredi" -> date du prochain vendredi, "31 janvier" -> "2026-01-31T00:00:00Z").
+8. Si le board ou la liste ne sont pas mentionnés, utilise les valeurs par défaut.
+9. Après chaque action, confirme brièvement ce qui a été fait.
 
 EXEMPLES:
 - "Ajoute une tâche Préparer le budget 2026 dans À faire pour vendredi" → createTrelloTask(title="Préparer le budget 2026", list="À faire", due_date="2026-XX-XX")
 - "Marque Médiation SNCF comme terminée" → completeTrelloTask(task_name="Médiation SNCF")
-- "Change la date de Renouvellement RTE au 31 janvier" → updateTrelloDueDate(task_name="Renouvellement RTE", due_date="2026-01-31T00:00:00Z")`;
+- "Change la date de Renouvellement RTE au 31 janvier" → updateTrelloDueDate(task_name="Renouvellement RTE", due_date="2026-01-31T00:00:00Z")
+- "Archive la tâche Test" → archiveTrelloTask(task_name="Test")
+- "Déplace la tâche Budget vers En cours" → moveTrelloTask(task_name="Budget", target_list="En cours")`;
 
 /**
  * Service pour gérer les appels OpenAI (variante B: parsing côté backend)
