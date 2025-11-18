@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
+    "postbuild": "echo 'Build terminé' && ls -la dist/ || echo 'dist/ introuvable'",
     "start": "node start.js",
     "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
     "test": "jest"
