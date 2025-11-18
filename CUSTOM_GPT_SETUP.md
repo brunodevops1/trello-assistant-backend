@@ -126,7 +126,7 @@ Copiez le contenu du fichier `openapi-schema.json` que j'ai créé, ou utilisez 
                           "properties": {
                             "name": {
                               "type": "string",
-                              "enum": ["createTrelloTask", "completeTrelloTask", "updateTrelloDueDate"]
+                              "enum": ["createTrelloTask", "completeTrelloTask", "updateTrelloDueDate", "archiveTrelloTask", "moveTrelloTask"]
                             },
                             "arguments": {
                               "type": "string",
