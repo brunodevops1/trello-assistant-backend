@@ -2,8 +2,8 @@
  * Service pour interagir avec OpenAI et définir les tools
  */
 
-import { ToolDefinition } from '../types/openai.types';
 import OpenAI from 'openai';
+import { ToolDefinition } from '../types/openai.types';
 
 /**
  * Définition des tools OpenAI pour l'assistant Trello
@@ -778,15 +778,27 @@ EXEMPLES:
  * Service pour gérer les appels OpenAI (variante B: parsing côté backend)
  */
 export class OpenAIService {
-  private apiKey: string;
+  private client: OpenAI | null;
 
   constructor() {
-    this.apiKey = process.env.OPENAI_API_KEY || '';
-    if (!this.apiKey) {
+    const apiKey = process.env.OPENAI_API_KEY;
+
+    if (!apiKey) {
       console.warn(
         'OPENAI_API_KEY non définie. Le parsing côté backend ne sera pas disponible.'
       );
+      this.client = null;
+      return;
     }
+
+    this.client = new OpenAI({ apiKey });
+  }
+
+  private ensureClient(): OpenAI {
+    if (!this.client) {
+      throw new Error('OPENAI_API_KEY non configurée');
+    }
+    return this.client;
   }
 
   /**
@@ -794,38 +806,25 @@ export class OpenAIService {
    * (Utilisé si on veut que le backend fasse le parsing)
    */
   async parseUserMessage(message: string): Promise<any> {
-    if (!this.apiKey) {
-      throw new Error('OPENAI_API_KEY non configurée');
-    }
+    const client = this.ensureClient();
 
-    const { default: axios } = await import('axios');
-
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-4-turbo-preview',
-        messages: [
-          {
-            role: 'system',
-            content: SYSTEM_PROMPT,
-          },
-          {
-            role: 'user',
-            content: message,
-          },
-        ],
-        tools: TRELLO_TOOLS,
-        tool_choice: 'auto',
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
+    const response = await client.chat.completions.create({
+      model: 'gpt-4-turbo-preview',
+      messages: [
+        {
+          role: 'system',
+          content: SYSTEM_PROMPT,
         },
-      }
-    );
+        {
+          role: 'user',
+          content: message,
+        },
+      ],
+      tools: TRELLO_TOOLS as any,
+      tool_choice: 'auto',
+    });
 
-    return response.data;
+    return response;
   }
 
   /**
@@ -835,40 +834,27 @@ export class OpenAIService {
     prompt: string,
     options?: { systemPrompt?: string; temperature?: number }
   ): Promise<string> {
-    if (!this.apiKey) {
-      throw new Error('OPENAI_API_KEY non configurée');
-    }
+    const client = this.ensureClient();
 
-    const { default: axios } = await import('axios');
-
-    const response = await axios.post(
-      'https://api.openai.com/v1/chat/completions',
-      {
-        model: 'gpt-4-turbo-preview',
-        temperature:
-          typeof options?.temperature === 'number' ? options.temperature : 0.2,
-        messages: [
-          {
-            role: 'system',
-            content:
-              options?.systemPrompt ||
-              'Tu es un consultant Trello senior qui fournit des analyses structurées et actionnables.',
-          },
-          {
-            role: 'user',
-            content: prompt,
-          },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
+    const response = await client.chat.completions.create({
+      model: 'gpt-4-turbo-preview',
+      temperature:
+        typeof options?.temperature === 'number' ? options.temperature : 0.2,
+      messages: [
+        {
+          role: 'system',
+          content:
+            options?.systemPrompt ||
+            'Tu es un consultant Trello senior qui fournit des analyses structurées et actionnables.',
         },
-      }
-    );
+        {
+          role: 'user',
+          content: prompt,
+        },
+      ],
+    });
 
-    const generated = response.data.choices?.[0]?.message?.content?.trim();
+    const generated = response.choices?.[0]?.message?.content?.trim();
     if (!generated) {
       throw new Error("Réponse vide de l'API OpenAI");
     }
