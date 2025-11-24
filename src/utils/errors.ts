@@ -47,3 +47,13 @@ export class ListNotFoundError extends TrelloError {
   }
 }
 
+export class LabelNotFoundError extends TrelloError {
+  constructor(labelName: string, boardName?: string) {
+    super(
+      `Label "${labelName}" introuvable${boardName ? ` sur le board "${boardName}"` : ''}`
+    );
+    this.name = 'LabelNotFoundError';
+    this.statusCode = 404;
+  }
+}
+
