@@ -2134,10 +2134,13 @@ router.get('/tools', optionalApiKeyAuth, async (_req: Request, res: Response) =>
 
 /**
  * GET /dummy
- * Endpoint minimal requis par les validateurs OpenAPI
+ * Endpoint de santé minimal requis par les validateurs OpenAPI
  */
 router.get('/dummy', (_req: Request, res: Response) => {
-  res.json({ status: 'ok' });
+  res.status(200).json({
+    status: 'ok',
+    message: 'Trello Assistant backend is running',
+  });
 });
 
 export default router;
