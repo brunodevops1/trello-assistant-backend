@@ -2128,5 +2128,13 @@ router.get('/tools', (_req: Request, res: Response) => {
   });
 });
 
+/**
+ * GET /dummy
+ * Endpoint minimal requis par les validateurs OpenAPI
+ */
+router.get('/dummy', (_req: Request, res: Response) => {
+  res.json({ status: 'ok' });
+});
+
 export default router;
 
