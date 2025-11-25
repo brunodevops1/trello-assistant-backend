@@ -25,7 +25,7 @@
   },
   "components": {
     "schemas": {},
-    "x-openai-tools": [
+    "x-oai-tools": [
       {
         "type": "function",
         "function": {
