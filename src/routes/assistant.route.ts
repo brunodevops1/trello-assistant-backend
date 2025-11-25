@@ -1069,6 +1069,75 @@ router.post(
 );
 
 /**
+ * @openapi
+ * /assistant/trello/card/complete:
+ *   post:
+ *     summary: Marque une carte Trello comme terminée.
+ *     description: Coche la carte comme complétée et l’archive si nécessaire.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - card_name
+ *             properties:
+ *               card_name:
+ *                 type: string
+ *                 description: Nom de la carte à compléter.
+ *               board_name:
+ *                 type: string
+ *                 description: Board cible (optionnel).
+ *     responses:
+ *       200:
+ *         description: Tâche complétée.
+ *       404:
+ *         description: Carte non trouvée.
+ */
+router.post(
+  '/trello/card/complete',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { card_name, board_name } = req.body || {};
+
+      if (!card_name || typeof card_name !== 'string') {
+        return res.status(400).json({
+          success: false,
+          error: 'Le champ "card_name" est requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const result = await trelloService.completeTask({
+        board: typeof board_name === 'string' ? board_name : undefined,
+        task_name: card_name,
+      });
+
+      return res.status(200).json({
+        success: true,
+        card: result,
+      });
+    } catch (error: any) {
+      console.error('Erreur dans POST /assistant/trello/card/complete:', error);
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de la complétion de la tâche',
+      });
+    }
+  }
+);
+
+/**
  * POST /assistant/trello/checklist/create
  * Crée une checklist sur une carte Trello
  */
