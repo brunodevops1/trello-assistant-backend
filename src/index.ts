@@ -5,6 +5,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
 import assistantRoutes from './routes/assistant.route';
 
 // Charger les variables d'environnement
@@ -31,6 +32,17 @@ app.get('/dummy', (_req, res) => {
   res.status(200).json({
     status: 'ok',
     message: 'Trello Assistant backend is running',
+  });
+});
+
+// Route directe pour servir tools.json depuis dist/
+app.get('/assistant/tools', (_req, res) => {
+  const filePath = path.join(process.cwd(), 'dist', 'tools.json');
+  res.sendFile(filePath, (err) => {
+    if (err) {
+      console.error('Erreur en envoyant tools.json :', err);
+      res.status(500).json({ error: 'tools.json introuvable' });
+    }
   });
 });
 
