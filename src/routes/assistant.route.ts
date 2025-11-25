@@ -2108,7 +2108,17 @@ router.get('/tools', (_req: Request, res: Response) => {
         url: 'https://trello-assistant-backend.onrender.com',
       },
     ],
-    paths: {},
+    paths: {
+      '/dummy': {
+        get: {
+          operationId: 'dummyOp',
+          description: 'Dummy endpoint required by OpenAPI validators.',
+          responses: {
+            200: { description: 'OK' },
+          },
+        },
+      },
+    },
     components: {
       schemas: {},
       'x-openai-tools': TRELLO_TOOLS,
