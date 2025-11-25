@@ -4,15 +4,13 @@
 
 import { Router, Request, Response } from 'express';
 import path from 'path';
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import { TrelloService } from '../services/trello.service';
 import { ToolCall } from '../types/openai.types';
 import { TrelloError } from '../utils/errors';
 
 const router = Router();
-const TOOLS_JSON_PATH = process.env.TOOLS_JSON_PATH
-  ? path.resolve(process.env.TOOLS_JSON_PATH)
-  : path.resolve(__dirname, '..', '..', 'tools.json');
+const TOOLS_JSON_PATH = path.join(__dirname, '..', 'tools.json');
 
 // Initialisation lazy du service Trello (après chargement des variables d'environnement)
 let trelloServiceInstance: TrelloService | null = null;
@@ -2276,18 +2274,13 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
  * Retourne le contenu exact de tools.json
  */
 router.get('/tools', optionalApiKeyAuth, async (_req: Request, res: Response) => {
-  console.log(`Serving tools.json at /assistant/tools from ${TOOLS_JSON_PATH}`);
-
   try {
-    const fileContent = await fs.readFile(TOOLS_JSON_PATH, 'utf-8');
+    const jsonData = fs.readFileSync(TOOLS_JSON_PATH, 'utf8');
     res.setHeader('Content-Type', 'application/json');
-    return res.send(fileContent);
+    res.status(200).send(jsonData);
   } catch (error: any) {
     console.error('Erreur lors de la lecture de tools.json:', error);
-    return res.status(500).json({
-      success: false,
-      error: "Impossible de lire le fichier tools.json.",
-    });
+    res.status(500).json({ error: 'tools.json introuvable' });
   }
 });
 
