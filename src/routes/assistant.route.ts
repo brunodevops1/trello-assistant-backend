@@ -1366,8 +1366,27 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
 
   for (const toolCall of toolCalls) {
     try {
-      const functionName = toolCall.function.name;
-      const args = JSON.parse(toolCall.function.arguments);
+      const functionCall: any =
+        (toolCall as any).function || (toolCall as any).function_call || {};
+
+      const functionName =
+        typeof functionCall.name === 'string'
+          ? functionCall.name.trim()
+          : '';
+
+      if (!functionName) {
+        throw new Error(
+          'Aucun nom de fonction fourni dans le tool_call (champ "function.name").'
+        );
+      }
+
+      const rawArgs =
+        typeof functionCall.arguments === 'string'
+          ? functionCall.arguments
+          : JSON.stringify(functionCall.arguments ?? {});
+
+      const args =
+        rawArgs && rawArgs.trim().length > 0 ? JSON.parse(rawArgs) : {};
 
       let result: any;
 
