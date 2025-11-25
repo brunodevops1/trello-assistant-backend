@@ -417,32 +417,6 @@ export const TRELLO_TOOLS: ToolDefinition[] = [
   {
     type: 'function',
     function: {
-      name: 'checkChecklistItem',
-      description:
-        'Coche un item dans une checklist existante d’une carte Trello.',
-      parameters: {
-        type: 'object',
-        properties: {
-          card_name: {
-            type: 'string',
-            description: "Nom exact de la carte contenant la checklist.",
-          },
-          checklist_name: {
-            type: 'string',
-            description: "Nom de la checklist cible.",
-          },
-          item_name: {
-            type: 'string',
-            description: 'Nom de l’item à cocher.',
-          },
-        },
-        required: ['card_name', 'checklist_name', 'item_name'],
-      },
-    },
-  },
-  {
-    type: 'function',
-    function: {
       name: 'addLabel',
       description:
         'Ajoute un label existant (par nom ou couleur) sur une carte Trello.',
