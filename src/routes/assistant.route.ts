@@ -2096,6 +2096,7 @@ router.get('/tools', (_req: Request, res: Response) => {
   const { TRELLO_TOOLS, SYSTEM_PROMPT } = require('../services/openai.service');
   res.json({
     openapi: '3.1.0',
+    name: 'trello-assistant',
     info: {
       title: 'Trello Assistant Tools',
       description:
@@ -2120,9 +2121,7 @@ router.get('/tools', (_req: Request, res: Response) => {
     },
     components: {
       schemas: {},
-      'x-openai-tools': {
-        tools: TRELLO_TOOLS,
-      },
+      'x-openai-tools': TRELLO_TOOLS,
       'x-openai-model': {
         system_prompt: SYSTEM_PROMPT,
       },
