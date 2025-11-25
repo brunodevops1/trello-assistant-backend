@@ -34,15 +34,15 @@
           "parameters": {
             "type": "object",
             "properties": {
-              "board": {
+              "board_name": {
                 "type": "string",
                 "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
               },
-              "list": {
+              "list_name": {
                 "type": "string",
                 "description": "Le nom de la liste dans laquelle créer la tâche. Par défaut: \"À faire\"."
               },
-              "title": {
+              "card_name": {
                 "type": "string",
                 "description": "Le titre de la tâche à créer. Obligatoire."
               },
@@ -52,7 +52,7 @@
               }
             },
             "required": [
-              "title"
+              "card_name"
             ]
           }
         }
@@ -65,7 +65,7 @@
           "parameters": {
             "type": "object",
             "properties": {
-              "board": {
+              "board_name": {
                 "type": "string",
                 "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
               },
@@ -88,7 +88,7 @@
           "parameters": {
             "type": "object",
             "properties": {
-              "board": {
+              "board_name": {
                 "type": "string",
                 "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
               },
@@ -116,7 +116,7 @@
           "parameters": {
             "type": "object",
             "properties": {
-              "board": {
+              "board_name": {
                 "type": "string",
                 "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
               },
@@ -139,7 +139,7 @@
           "parameters": {
             "type": "object",
             "properties": {
-              "board": {
+              "board_name": {
                 "type": "string",
                 "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
               },
@@ -147,14 +147,14 @@
                 "type": "string",
                 "description": "Le nom exact de la tâche à déplacer. Obligatoire."
               },
-              "target_list": {
+              "list_name": {
                 "type": "string",
                 "description": "Le nom de la liste de destination où déplacer la tâche. Obligatoire."
               }
             },
             "required": [
               "task_name",
-              "target_list"
+              "list_name"
             ]
           }
         }
