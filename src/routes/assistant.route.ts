@@ -146,6 +146,8 @@ router.get('/health', optionalApiKeyAuth, (_req: Request, res: Response) => {
  *     responses:
  *       200:
  *         description: Carte créée avec succès.
+ *       400:
+ *         description: Paramètres manquants ou invalides.
  */
 router.post(
   '/createTrelloTask',
