@@ -10,19 +10,7 @@
       "url": "https://trello-assistant-backend.onrender.com"
     }
   ],
-  "paths": {
-    "/dummy": {
-      "get": {
-        "operationId": "dummyOp",
-        "description": "Endpoint factice exigé par les validateurs OpenAPI.",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    }
-  },
+  "paths": {},
   "components": {
     "schemas": {},
     "x-openai-tools": [
