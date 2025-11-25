@@ -6,6 +6,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import assistantRoutes from './routes/assistant.route';
+import { swaggerSpec, swaggerUi } from './swagger';
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -20,6 +21,8 @@ app.use(express.json());
 
 // Routes
 app.use('/assistant', assistantRoutes);
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/openapi.json', (_req, res) => res.json(swaggerSpec));
 
 // Route de santé
 app.get('/health', (_req, res) => {

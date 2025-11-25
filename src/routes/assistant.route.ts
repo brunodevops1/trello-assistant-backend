@@ -103,8 +103,13 @@ router.post('/trello', optionalApiKeyAuth, async (req: Request, res: Response) =
 });
 
 /**
- * GET /assistant/health
- * Ping minimal pour vérifier l'état du backend via /assistant prefix
+ * @openapi
+ * /assistant/health:
+ *   get:
+ *     summary: Vérifie l'état du backend Trello Assistant.
+ *     responses:
+ *       200:
+ *         description: Backend opérationnel.
  */
 router.get('/health', optionalApiKeyAuth, (_req: Request, res: Response) => {
   res.status(200).json({
@@ -114,8 +119,33 @@ router.get('/health', optionalApiKeyAuth, (_req: Request, res: Response) => {
 });
 
 /**
- * POST /assistant/createTrelloTask
- * Crée une carte sur un board / liste donnés
+ * @openapi
+ * /assistant/createTrelloTask:
+ *   post:
+ *     summary: Crée une carte Trello dans un board et une liste donnés.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - board_name
+ *               - list_name
+ *               - card_name
+ *             properties:
+ *               board_name:
+ *                 type: string
+ *               list_name:
+ *                 type: string
+ *               card_name:
+ *                 type: string
+ *               due_date:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: Carte créée avec succès.
  */
 router.post(
   '/createTrelloTask',
@@ -170,8 +200,24 @@ router.post(
 );
 
 /**
- * POST /assistant/generateBoardSummary
- * Génère un résumé global du board
+ * @openapi
+ * /assistant/generateBoardSummary:
+ *   post:
+ *     summary: Génère un résumé global des listes et cartes d'un board.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - board_name
+ *             properties:
+ *               board_name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Résumé généré.
  */
 router.post(
   '/generateBoardSummary',
@@ -216,8 +262,24 @@ router.post(
 );
 
 /**
- * POST /assistant/analyzeBoardHealth
- * Retourne des métriques simples sur un board
+ * @openapi
+ * /assistant/analyzeBoardHealth:
+ *   post:
+ *     summary: Analyse la santé générale d'un board Trello.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - board_name
+ *             properties:
+ *               board_name:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Rapport de santé renvoyé.
  */
 router.post(
   '/analyzeBoardHealth',
