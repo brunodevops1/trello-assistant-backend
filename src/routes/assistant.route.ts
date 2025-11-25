@@ -560,6 +560,39 @@ router.post(
 );
 
 /**
+ * @openapi
+ * /assistant/trello/card/update-field:
+ *   post:
+ *     summary: Met à jour un champ spécifique d’une carte Trello.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - card_name
+ *               - field_name
+ *               - new_value
+ *             properties:
+ *               card_name:
+ *                 type: string
+ *                 description: Nom exact de la carte à modifier.
+ *               field_name:
+ *                 type: string
+ *                 description: Nom du champ Trello à mettre à jour.
+ *               new_value:
+ *                 type: string
+ *                 description: Nouvelle valeur à appliquer au champ.
+ *     responses:
+ *       200:
+ *         description: Champ mis à jour avec succès.
+ *       400:
+ *         description: Paramètres invalides ou manquants.
+ *       404:
+ *         description: Carte non trouvée.
+ */
+/**
  * POST /assistant/trello/card/update-field
  * Met à jour un champ spécifique d'une carte Trello
  */
