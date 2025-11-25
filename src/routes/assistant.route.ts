@@ -105,6 +105,165 @@ router.post('/trello', optionalApiKeyAuth, async (req: Request, res: Response) =
 });
 
 /**
+ * GET /assistant/health
+ * Ping minimal pour vérifier l'état du backend via /assistant prefix
+ */
+router.get('/health', optionalApiKeyAuth, (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Trello Assistant backend is running',
+  });
+});
+
+/**
+ * POST /assistant/createTrelloTask
+ * Crée une carte sur un board / liste donnés
+ */
+router.post(
+  '/createTrelloTask',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { board_name, list_name, card_name, due_date } = req.body || {};
+
+      if (
+        typeof board_name !== 'string' ||
+        typeof list_name !== 'string' ||
+        typeof card_name !== 'string'
+      ) {
+        return res.status(400).json({
+          success: false,
+          error:
+            'Les champs "board_name", "list_name" et "card_name" sont requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const card = await trelloService.createTask({
+        board: board_name,
+        list: list_name,
+        title: card_name,
+        due_date:
+          typeof due_date === 'string' && due_date.trim().length > 0
+            ? due_date
+            : undefined,
+      });
+
+      return res.status(200).json({
+        success: true,
+        card,
+      });
+    } catch (error: any) {
+      console.error('Erreur dans POST /assistant/createTrelloTask:', error);
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de la création de la tâche',
+      });
+    }
+  }
+);
+
+/**
+ * POST /assistant/generateBoardSummary
+ * Génère un résumé global du board
+ */
+router.post(
+  '/generateBoardSummary',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { board_name } = req.body || {};
+      if (typeof board_name !== 'string' || board_name.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Le champ "board_name" est requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const report = await trelloService.generateBoardSummary(board_name);
+
+      return res.status(200).json({
+        success: true,
+        board: board_name,
+        summary: report,
+      });
+    } catch (error: any) {
+      console.error(
+        'Erreur dans POST /assistant/generateBoardSummary:',
+        error
+      );
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de la génération du résumé',
+      });
+    }
+  }
+);
+
+/**
+ * POST /assistant/analyzeBoardHealth
+ * Retourne des métriques simples sur un board
+ */
+router.post(
+  '/analyzeBoardHealth',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { board_name } = req.body || {};
+      if (typeof board_name !== 'string' || board_name.trim().length === 0) {
+        return res.status(400).json({
+          success: false,
+          error: 'Le champ "board_name" est requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const report = await trelloService.analyzeBoardHealth(board_name);
+
+      return res.status(200).json({
+        success: true,
+        board: board_name,
+        metrics: report,
+      });
+    } catch (error: any) {
+      console.error(
+        'Erreur dans POST /assistant/analyzeBoardHealth:',
+        error
+      );
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || "Erreur lors de l'analyse du board",
+      });
+    }
+  }
+);
+
+/**
  * GET /assistant/trello/actions/board
  * Récupère les actions d'un board Trello
  */
