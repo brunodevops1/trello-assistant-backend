@@ -26,6 +26,14 @@ app.get('/health', (_req, res) => {
   res.json({ status: 'ok', service: 'trello-assistant-backend' });
 });
 
+// Ping minimal demandé par ChatGPT Tools
+app.get('/dummy', (_req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    message: 'Trello Assistant backend is running',
+  });
+});
+
 // Démarrage du serveur
 app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur le port ${PORT}`);
