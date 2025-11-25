@@ -1957,6 +1957,15 @@ router.post(
   }
 );
 
+function pickFirstString(...candidates: any[]): string | undefined {
+  for (const candidate of candidates) {
+    if (typeof candidate === 'string' && candidate.trim().length > 0) {
+      return candidate.trim();
+    }
+  }
+  return undefined;
+}
+
 /**
  * Exécute les tool calls et retourne les résultats
  */
@@ -1992,8 +2001,32 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
       const trelloService = getTrelloService();
 
       switch (functionName) {
-        case 'createTrelloTask':
-          result = await trelloService.createTask(args);
+        case 'createTrelloTask': {
+          const normalizedBoard = pickFirstString(
+            args.board,
+            args.board_name,
+            args.boardName
+          );
+          const normalizedList = pickFirstString(args.list, args.list_name, args.listName);
+          const normalizedTitle = pickFirstString(
+            args.title,
+            args.card_name,
+            args.cardName
+          );
+          const normalizedDueDate = pickFirstString(args.due_date, args.dueDate);
+
+          if (!normalizedTitle) {
+            throw new Error(
+              'Le paramètre "card_name" (ou "title") est requis pour createTrelloTask'
+            );
+          }
+
+          result = await trelloService.createTask({
+            board: normalizedBoard,
+            list: normalizedList,
+            title: normalizedTitle,
+            due_date: normalizedDueDate,
+          });
           results.push({
             tool_call_id: toolCall.id,
             function_name: functionName,
@@ -2002,9 +2035,31 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
             data: result,
           });
           break;
+        }
 
-        case 'completeTrelloTask':
-          result = await trelloService.completeTask(args);
+        case 'completeTrelloTask': {
+          const normalizedBoard = pickFirstString(
+            args.board,
+            args.board_name,
+            args.boardName
+          );
+          const normalizedTaskName = pickFirstString(
+            args.task_name,
+            args.card_name,
+            args.taskName,
+            args.cardName
+          );
+
+          if (!normalizedTaskName) {
+            throw new Error(
+              'Le paramètre "task_name" (ou "card_name") est requis pour completeTrelloTask'
+            );
+          }
+
+          result = await trelloService.completeTask({
+            board: normalizedBoard,
+            task_name: normalizedTaskName,
+          });
           results.push({
             tool_call_id: toolCall.id,
             function_name: functionName,
@@ -2013,9 +2068,33 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
             data: result,
           });
           break;
+        }
 
-        case 'updateTrelloDueDate':
-          result = await trelloService.updateDueDate(args);
+        case 'updateTrelloDueDate': {
+          const normalizedBoard = pickFirstString(
+            args.board,
+            args.board_name,
+            args.boardName
+          );
+          const normalizedTaskName = pickFirstString(
+            args.task_name,
+            args.card_name,
+            args.taskName,
+            args.cardName
+          );
+          const normalizedDueDate = pickFirstString(args.due_date, args.dueDate);
+
+          if (!normalizedTaskName || !normalizedDueDate) {
+            throw new Error(
+              'Les paramètres "task_name" (ou "card_name") et "due_date" sont requis pour updateTrelloDueDate'
+            );
+          }
+
+          result = await trelloService.updateDueDate({
+            board: normalizedBoard,
+            task_name: normalizedTaskName,
+            due_date: normalizedDueDate,
+          });
           results.push({
             tool_call_id: toolCall.id,
             function_name: functionName,
@@ -2024,9 +2103,31 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
             data: result,
           });
           break;
+        }
 
-        case 'archiveTrelloTask':
-          result = await trelloService.archiveTask(args);
+        case 'archiveTrelloTask': {
+          const normalizedBoard = pickFirstString(
+            args.board,
+            args.board_name,
+            args.boardName
+          );
+          const normalizedTaskName = pickFirstString(
+            args.task_name,
+            args.card_name,
+            args.taskName,
+            args.cardName
+          );
+
+          if (!normalizedTaskName) {
+            throw new Error(
+              'Le paramètre "task_name" (ou "card_name") est requis pour archiveTrelloTask'
+            );
+          }
+
+          result = await trelloService.archiveTask({
+            board: normalizedBoard,
+            task_name: normalizedTaskName,
+          });
           results.push({
             tool_call_id: toolCall.id,
             function_name: functionName,
@@ -2035,17 +2136,46 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
             data: result,
           });
           break;
+        }
 
-        case 'moveTrelloTask':
-          result = await trelloService.moveTask(args);
+        case 'moveTrelloTask': {
+          const normalizedBoard = pickFirstString(
+            args.board,
+            args.board_name,
+            args.boardName
+          );
+          const normalizedTaskName = pickFirstString(
+            args.task_name,
+            args.card_name,
+            args.taskName,
+            args.cardName
+          );
+          const normalizedTargetList = pickFirstString(
+            args.target_list,
+            args.list_name,
+            args.listName
+          );
+
+          if (!normalizedTaskName || !normalizedTargetList) {
+            throw new Error(
+              'Les paramètres "task_name" (ou "card_name") et "target_list" (ou "list_name") sont requis pour moveTrelloTask'
+            );
+          }
+
+          result = await trelloService.moveTask({
+            board: normalizedBoard,
+            task_name: normalizedTaskName,
+            target_list: normalizedTargetList,
+          });
           results.push({
             tool_call_id: toolCall.id,
             function_name: functionName,
             success: true,
-            message: `Tâche "${result.name}" déplacée vers "${args.target_list}"`,
+            message: `Tâche "${result.name}" déplacée vers "${normalizedTargetList}"`,
             data: result,
           });
           break;
+        }
 
         case 'getBoardActions': {
           const boardName = args.board_name || args.boardName;

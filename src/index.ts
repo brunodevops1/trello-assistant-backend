@@ -2,11 +2,12 @@
  * Point d'entrée de l'application
  */
 
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
 import dotenv from 'dotenv';
 import assistantRoutes from './routes/assistant.route';
 import { swaggerSpec, swaggerUi } from './swagger';
+import requestResponseLogger from './middleware/requestLogger';
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -18,6 +19,7 @@ const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(requestResponseLogger);
 
 // Routes
 app.use('/assistant', assistantRoutes);
