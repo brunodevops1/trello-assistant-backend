@@ -2110,8 +2110,8 @@ router.get('/tools', (_req: Request, res: Response) => {
     paths: {
       '/dummy': {
         get: {
+          operationId: 'dummyOp',
           description: 'Dummy endpoint required by OpenAPI validators.',
-          operationId: 'dummyOperation',
           responses: {
             200: { description: 'OK' },
           },
@@ -2120,10 +2120,12 @@ router.get('/tools', (_req: Request, res: Response) => {
     },
     components: {
       schemas: {},
-      'x-tools': {
+      'x-openai-tools': {
         tools: TRELLO_TOOLS,
       },
-      'x-system-prompt': SYSTEM_PROMPT,
+      'x-openai-model': {
+        system_prompt: SYSTEM_PROMPT,
+      },
     },
   });
 });
