@@ -2095,8 +2095,25 @@ async function executeToolCalls(toolCalls: ToolCall[]): Promise<any[]> {
 router.get('/tools', (_req: Request, res: Response) => {
   const { TRELLO_TOOLS, SYSTEM_PROMPT } = require('../services/openai.service');
   res.json({
-    tools: TRELLO_TOOLS,
-    system_prompt: SYSTEM_PROMPT,
+    openapi: '3.1.0',
+    info: {
+      title: 'Trello Assistant Tools',
+      description:
+        'OpenAPI wrapper exposing Trello assistant function tools and system prompt for ChatGPT.',
+      version: '1.0.0',
+    },
+    servers: [
+      {
+        url: 'https://trello-assistant-backend.onrender.com',
+      },
+    ],
+    paths: {},
+    components: {
+      'x-tools': {
+        tools: TRELLO_TOOLS,
+      },
+      'x-system-prompt': SYSTEM_PROMPT,
+    },
   });
 });
 
