@@ -203,6 +203,220 @@ router.post(
 
 /**
  * @openapi
+ * /assistant/updateTrelloDueDate:
+ *   post:
+ *     summary: Met à jour la date d’échéance d’une carte.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - card_name
+ *               - due_date
+ *             properties:
+ *               card_name:
+ *                 type: string
+ *                 description: Nom de la carte à modifier.
+ *               due_date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Nouvelle date d'échéance au format ISO 8601.
+ *               board_name:
+ *                 type: string
+ *                 description: Board cible (optionnel).
+ *     responses:
+ *       200:
+ *         description: Échéance mise à jour.
+ *       400:
+ *         description: Date invalide ou paramètres manquants.
+ *       404:
+ *         description: Carte non trouvée.
+ */
+router.post(
+  '/updateTrelloDueDate',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const { board_name, card_name, due_date } = req.body || {};
+
+      if (!card_name || typeof card_name !== 'string') {
+        return res.status(400).json({
+          success: false,
+          error: 'Le champ "card_name" est requis.',
+        });
+      }
+
+      if (!due_date || typeof due_date !== 'string') {
+        return res.status(400).json({
+          success: false,
+          error: 'Le champ "due_date" est requis.',
+        });
+      }
+
+      if (Number.isNaN(Date.parse(due_date))) {
+        return res.status(400).json({
+          success: false,
+          error: 'Le champ "due_date" doit être une date ISO 8601 valide.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const updated = await trelloService.updateDueDate({
+        board: typeof board_name === 'string' ? board_name : undefined,
+        task_name: card_name,
+        due_date,
+      });
+
+      return res.status(200).json({
+        success: true,
+        updated,
+      });
+    } catch (error: any) {
+      console.error('Erreur dans POST /assistant/updateTrelloDueDate:', error);
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || "Erreur lors de la mise à jour de l'échéance",
+      });
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /assistant/generateBoardSummary:
+ *   get:
+ *     summary: Génère un résumé exécutif d’un board Trello.
+ *     description: Retourne un résumé global du board (listes, cartes, deadlines, santé opérationnelle).
+ *     parameters:
+ *       - in: query
+ *         name: board_name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nom du board Trello ciblé.
+ *     responses:
+ *       200:
+ *         description: Résumé généré.
+ *       404:
+ *         description: Board non trouvé.
+ */
+router.get(
+  '/generateBoardSummary',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const boardName =
+        typeof req.query.board_name === 'string'
+          ? req.query.board_name
+          : undefined;
+
+      if (!boardName) {
+        return res.status(400).json({
+          success: false,
+          error: 'Le paramètre "board_name" est requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const report = await trelloService.generateBoardSummary(boardName);
+
+      return res.status(200).json({
+        success: true,
+        board: boardName,
+        summary: report,
+      });
+    } catch (error: any) {
+      console.error('Erreur dans GET /assistant/generateBoardSummary:', error);
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de la génération du résumé',
+      });
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /assistant/suggestBoardCleanup:
+ *   get:
+ *     summary: Suggère des actions de nettoyage pour un board.
+ *     description: Fournit une liste de cartes obsolètes, doublons ou sans échéance pour améliorer la clarté du board.
+ *     parameters:
+ *       - in: query
+ *         name: board_name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nom du board Trello à analyser.
+ *     responses:
+ *       200:
+ *         description: Suggestions de nettoyage générées.
+ *       404:
+ *         description: Board non trouvé.
+ */
+router.get(
+  '/suggestBoardCleanup',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const boardName =
+        typeof req.query.board_name === 'string'
+          ? req.query.board_name
+          : undefined;
+
+      if (!boardName) {
+        return res.status(400).json({
+          success: false,
+          error: 'Le paramètre "board_name" est requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const plan = await trelloService.suggestBoardCleanup(boardName);
+
+      return res.status(200).json({
+        success: true,
+        board: boardName,
+        plan,
+      });
+    } catch (error: any) {
+      console.error('Erreur dans GET /assistant/suggestBoardCleanup:', error);
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || 'Erreur lors de la génération du plan de nettoyage',
+      });
+    }
+  }
+);
+
+/**
+ * @openapi
  * /assistant/generateBoardSummary:
  *   post:
  *     summary: Génère un résumé global des listes et cartes d'un board.
@@ -258,6 +472,68 @@ router.post(
       return res.status(500).json({
         success: false,
         error: error.message || 'Erreur lors de la génération du résumé',
+      });
+    }
+  }
+);
+
+/**
+ * @openapi
+ * /assistant/analyzeBoardHealth:
+ *   get:
+ *     summary: Analyse la santé d’un board Trello.
+ *     description: Analyse les cartes en retard, les listes surchargées et les priorités non assignées.
+ *     parameters:
+ *       - in: query
+ *         name: board_name
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nom du board Trello à analyser.
+ *     responses:
+ *       200:
+ *         description: Analyse retournée.
+ *       404:
+ *         description: Board non trouvé.
+ */
+router.get(
+  '/analyzeBoardHealth',
+  optionalApiKeyAuth,
+  async (req: Request, res: Response) => {
+    try {
+      const boardName =
+        typeof req.query.board_name === 'string'
+          ? req.query.board_name
+          : undefined;
+
+      if (!boardName) {
+        return res.status(400).json({
+          success: false,
+          error: 'Le paramètre "board_name" est requis.',
+        });
+      }
+
+      const trelloService = getTrelloService();
+      const report = await trelloService.analyzeBoardHealth(boardName);
+
+      return res.status(200).json({
+        success: true,
+        board: boardName,
+        metrics: report,
+      });
+    } catch (error: any) {
+      console.error('Erreur dans GET /assistant/analyzeBoardHealth:', error);
+
+      if (error instanceof TrelloError) {
+        return res.status(error.statusCode || 500).json({
+          success: false,
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        success: false,
+        error: error.message || "Erreur lors de l'analyse du board",
       });
     }
   }
