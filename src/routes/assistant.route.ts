@@ -14,6 +14,37 @@ const router = Router();
 const TOOLS_JSON_PATH = resolveToolsJsonPath();
 console.log(`[tools.json] Definition served from: ${TOOLS_JSON_PATH}`);
 
+const EXPRESS_TOOL_ROUTES = [
+  'createTrelloTask',
+  'completeTrelloTask',
+  'updateTrelloDueDate',
+  'archiveTrelloTask',
+  'moveTrelloTask',
+  'getBoardActions',
+  'getCardActions',
+  'improveCardDescription',
+  'updateCardField',
+  'moveCardToList',
+  'deleteCard',
+  'archiveCard',
+  'createChecklist',
+  'addChecklistItem',
+  'checkChecklistItem',
+  'addLabel',
+  'shiftDueDates',
+  'listBoardLabels',
+  'listOverdueTasks',
+  'sortListByDueDate',
+  'prioritizeList',
+  'groupCards',
+  'getBoardSnapshot',
+  'analyzeBoardHealth',
+  'auditList',
+  'auditHistory',
+  'generateBoardSummary',
+  'suggestBoardCleanup',
+];
+
 // Initialisation lazy du service Trello (après chargement des variables d'environnement)
 let trelloServiceInstance: TrelloService | null = null;
 
@@ -1976,6 +2007,44 @@ router.post(
     }
   }
 );
+
+EXPRESS_TOOL_ROUTES.forEach((action) => {
+  router.post(`/${action}`, optionalApiKeyAuth, createToolEndpointHandler(action));
+});
+
+function createToolEndpointHandler(action: string) {
+  return async (req: Request, res: Response) => {
+    try {
+      const handler = (trelloToolHandlers as Record<string, TrelloToolHandler>)[action];
+
+      if (!handler) {
+        return res.status(404).json({
+          success: false,
+          error: `Handler ${action} introuvable`,
+        });
+      }
+
+      const payload = typeof req.body === 'object' && req.body !== null ? req.body : {};
+      if (typeof payload.action !== 'string') {
+        payload.action = action;
+      }
+
+      const result = await handler(payload);
+
+      return res.status(200).json({
+        success: true,
+        message: result?.message ?? `Action "${action}" exécutée avec succès`,
+        data: result?.data ?? null,
+      });
+    } catch (error: any) {
+      console.error(`Erreur dans POST /assistant/${action}:`, error);
+      return res.status(500).json({
+        success: false,
+        error: error?.message || "Erreur lors de l'exécution de l'action",
+      });
+    }
+  };
+}
 
 /**
  * Exécute les tool calls et retourne les résultats
