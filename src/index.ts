@@ -8,6 +8,7 @@ import dotenv from 'dotenv';
 import assistantRoutes from './routes/assistant.route';
 import { swaggerSpec, swaggerUi } from './swagger';
 import requestResponseLogger from './middleware/requestLogger';
+import { dynamicToolRouter } from './assistant/router';
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -23,6 +24,7 @@ app.use(requestResponseLogger);
 
 // Routes
 app.use('/assistant', assistantRoutes);
+app.post('/assistant/run', dynamicToolRouter);
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/openapi.json', (_req, res) => res.json(swaggerSpec));
 
