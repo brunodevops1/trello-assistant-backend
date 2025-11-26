@@ -49,12 +49,20 @@
               "due_date": {
                 "type": "string",
                 "description": "La date d'échéance au format ISO 8601 (ex: \"2026-01-31T00:00:00Z\"). Optionnel."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "createTrelloTask"
               }
             },
             "required": [
+              "action",
               "card_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -72,12 +80,20 @@
               "task_name": {
                 "type": "string",
                 "description": "Le nom exact de la tâche à marquer comme terminée. Obligatoire."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "completeTrelloTask"
               }
             },
             "required": [
+              "action",
               "task_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -99,13 +115,21 @@
               "due_date": {
                 "type": "string",
                 "description": "La nouvelle date d'échéance au format ISO 8601 (ex: \"2026-01-31T00:00:00Z\"). Obligatoire."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "updateTrelloDueDate"
               }
             },
             "required": [
+              "action",
               "task_name",
               "due_date"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -123,12 +147,20 @@
               "task_name": {
                 "type": "string",
                 "description": "Le nom exact de la tâche à archiver. Obligatoire."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "archiveTrelloTask"
               }
             },
             "required": [
+              "action",
               "task_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -150,13 +182,21 @@
               "list_name": {
                 "type": "string",
                 "description": "Le nom de la liste de destination où déplacer la tâche. Obligatoire."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "moveTrelloTask"
               }
             },
             "required": [
+              "action",
               "task_name",
               "list_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -189,12 +229,20 @@
               "limit": {
                 "type": "number",
                 "description": "Nombre maximum d’actions à récupérer (ex: 50)."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "getBoardActions"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -227,12 +275,20 @@
               "limit": {
                 "type": "number",
                 "description": "Nombre maximum d’actions à récupérer (ex: 50)."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "getCardActions"
               }
             },
             "required": [
+              "action",
               "card_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -250,12 +306,20 @@
               "instructions": {
                 "type": "string",
                 "description": "Consignes additionnelles (ton, structure, points à aborder). Optionnel."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "improveCardDescription"
               }
             },
             "required": [
+              "action",
               "card_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -277,14 +341,22 @@
               "value": {
                 "type": "string",
                 "description": "Nouvelle valeur à appliquer au champ."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "updateCardField"
               }
             },
             "required": [
+              "action",
               "card_name",
               "field",
               "value"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -302,13 +374,21 @@
               "list_name": {
                 "type": "string",
                 "description": "Nom de la liste destination (ex: 'En cours', 'Done')."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "moveCardToList"
               }
             },
             "required": [
+              "action",
               "card_name",
               "list_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -322,12 +402,20 @@
               "card_name": {
                 "type": "string",
                 "description": "Nom exact de la carte à supprimer."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "deleteCard"
               }
             },
             "required": [
+              "action",
               "card_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -341,12 +429,20 @@
               "card_name": {
                 "type": "string",
                 "description": "Nom exact de la carte à archiver."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "archiveCard"
               }
             },
             "required": [
+              "action",
               "card_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -371,13 +467,21 @@
                   "type": "string"
                 },
                 "description": "Liste d’items à ajouter à la checklist (optionnel)."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "createChecklist"
               }
             },
             "required": [
+              "action",
               "card_name",
               "checklist_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -399,14 +503,22 @@
               "item_name": {
                 "type": "string",
                 "description": "Nom de l’item à ajouter."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "addChecklistItem"
               }
             },
             "required": [
+              "action",
               "card_name",
               "checklist_name",
               "item_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -428,14 +540,22 @@
               "item_name": {
                 "type": "string",
                 "description": "Nom de l’item à cocher."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "checkChecklistItem"
               }
             },
             "required": [
+              "action",
               "card_name",
               "checklist_name",
               "item_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -453,13 +573,21 @@
               "label_name_or_color": {
                 "type": "string",
                 "description": "Nom du label ou couleur (ex: \"Urgent\", \"red\"). Les labels doivent déjà exister sur le board."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "addLabel"
               }
             },
             "required": [
+              "action",
               "card_name",
               "label_name_or_color"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -477,13 +605,21 @@
               "days": {
                 "type": "number",
                 "description": "Nombre de jours à ajouter (positif) ou retirer (négatif) aux échéances existantes."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "shiftDueDates"
               }
             },
             "required": [
+              "action",
               "list_name",
               "days"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -497,12 +633,20 @@
               "board_name": {
                 "type": "string",
                 "description": "Nom ou ID du board Trello."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "listBoardLabels"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -516,12 +660,20 @@
               "board_name": {
                 "type": "string",
                 "description": "Nom ou ID du board à analyser."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "listOverdueTasks"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -543,12 +695,20 @@
                   "desc"
                 ],
                 "description": "Ordre de tri: asc (par défaut) ou desc."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "sortListByDueDate"
               }
             },
             "required": [
+              "action",
               "list_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -562,12 +722,20 @@
               "list_name": {
                 "type": "string",
                 "description": "Nom de la liste à prioriser."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "prioritizeList"
               }
             },
             "required": [
+              "action",
               "list_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -590,13 +758,21 @@
                   "due"
                 ],
                 "description": "Critère utilisé pour regrouper les cartes."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "groupCards"
               }
             },
             "required": [
+              "action",
               "board_name",
               "criteria"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -610,12 +786,20 @@
               "board_name": {
                 "type": "string",
                 "description": "Nom du board Trello."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "getBoardSnapshot"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -629,12 +813,20 @@
               "board_name": {
                 "type": "string",
                 "description": "Nom du board Trello."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "analyzeBoardHealth"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -652,13 +844,21 @@
               "list_name": {
                 "type": "string",
                 "description": "Nom de la liste à auditer."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "auditList"
               }
             },
             "required": [
+              "action",
               "board_name",
               "list_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -680,12 +880,20 @@
               "before": {
                 "type": "string",
                 "description": "Fin de période ISO 8601 (optionnel)."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "auditHistory"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -699,12 +907,20 @@
               "board_name": {
                 "type": "string",
                 "description": "Nom du board à résumer."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "generateBoardSummary"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       },
       {
@@ -718,12 +934,20 @@
               "board_name": {
                 "type": "string",
                 "description": "Nom du board à analyser."
+              },
+              "action": {
+                "type": "string",
+                "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+                "const": "suggestBoardCleanup"
               }
             },
             "required": [
+              "action",
               "board_name"
             ]
-          }
+          },
+          "endpoint": "/assistant/run",
+          "method": "POST"
         }
       }
     ],
