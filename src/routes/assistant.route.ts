@@ -10,7 +10,8 @@ import { ToolCall } from '../types/openai.types';
 import { TrelloError } from '../utils/errors';
 
 const router = Router();
-const TOOLS_JSON_PATH = path.join(__dirname, '..', 'tools.json');
+const TOOLS_JSON_PATH = resolveToolsJsonPath();
+console.log(`[tools.json] Definition served from: ${TOOLS_JSON_PATH}`);
 
 // Initialisation lazy du service Trello (après chargement des variables d'environnement)
 let trelloServiceInstance: TrelloService | null = null;
@@ -37,6 +38,24 @@ function optionalApiKeyAuth(req: Request, res: Response, next: Function) {
   }
   
   next();
+}
+
+function resolveToolsJsonPath(): string {
+  const projectRoot = path.resolve(__dirname, '..', '..');
+  const candidates = [
+    path.resolve(__dirname, '..', 'tools.json'), // dist build
+    path.join(projectRoot, 'dist', 'tools.json'), // fallback to dist at root
+    path.join(projectRoot, 'tools.json'), // final fallback for dev/test
+  ];
+
+  for (const candidate of candidates) {
+    if (fs.existsSync(candidate)) {
+      return candidate;
+    }
+  }
+
+  console.error('[tools.json] Introuvable. Chemins testés:', candidates);
+  return candidates[candidates.length - 1];
 }
 
 /**
