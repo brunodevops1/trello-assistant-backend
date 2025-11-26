@@ -21,10 +21,1467 @@
           }
         }
       }
+    },
+    "/assistant/createTrelloTask": {
+      "post": {
+        "operationId": "createTrelloTask",
+        "description": "Crée une nouvelle tâche (carte) dans Trello. Utilise cette fonction quand l'utilisateur demande d'ajouter, créer ou insérer une tâche.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createTrelloTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/completeTrelloTask": {
+      "post": {
+        "operationId": "completeTrelloTask",
+        "description": "Marque une tâche existante comme terminée dans Trello. Utilise cette fonction quand l'utilisateur demande de marquer, terminer, compléter ou fermer une tâche.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/completeTrelloTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/updateTrelloDueDate": {
+      "post": {
+        "operationId": "updateTrelloDueDate",
+        "description": "Met à jour la date d'échéance d'une tâche existante dans Trello. Utilise cette fonction quand l'utilisateur demande de changer, modifier ou déplacer la date d'une tâche.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateTrelloDueDateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/archiveTrelloTask": {
+      "post": {
+        "operationId": "archiveTrelloTask",
+        "description": "Archive une tâche existante dans Trello (la ferme sans la supprimer). Utilise cette fonction quand l'utilisateur demande d'archiver, fermer ou supprimer visuellement une tâche.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/archiveTrelloTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/moveTrelloTask": {
+      "post": {
+        "operationId": "moveTrelloTask",
+        "description": "Déplace une tâche existante d'une liste à une autre dans Trello. Utilise cette fonction quand l'utilisateur demande de déplacer, transférer ou changer la liste d'une tâche.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/moveTrelloTaskRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/getBoardActions": {
+      "post": {
+        "operationId": "getBoardActions",
+        "description": "Récupère les dernières actions d’un board Trello pour analyser l’historique (création, mise à jour, déplacement, commentaires, etc.).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getBoardActionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/getCardActions": {
+      "post": {
+        "operationId": "getCardActions",
+        "description": "Récupère l'historique des actions sur une carte Trello (créations, mises à jour, déplacements, commentaires, etc.).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getCardActionsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/improveCardDescription": {
+      "post": {
+        "operationId": "improveCardDescription",
+        "description": "Améliore la description d’une carte Trello en la rendant plus claire, structurée et professionnelle.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/improveCardDescriptionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/updateCardField": {
+      "post": {
+        "operationId": "updateCardField",
+        "description": "Met à jour un champ spécifique d’une carte Trello (nom, description, échéance, position, etc.).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateCardFieldRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/moveCardToList": {
+      "post": {
+        "operationId": "moveCardToList",
+        "description": "Déplace une carte Trello vers une autre liste.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/moveCardToListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/deleteCard": {
+      "post": {
+        "operationId": "deleteCard",
+        "description": "Supprime définitivement une carte Trello.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/deleteCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/archiveCard": {
+      "post": {
+        "operationId": "archiveCard",
+        "description": "Archive une carte Trello en la plaçant dans l'état 'closed=true'.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/archiveCardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/createChecklist": {
+      "post": {
+        "operationId": "createChecklist",
+        "description": "Crée une checklist sur une carte Trello, avec des items optionnels.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createChecklistRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/addChecklistItem": {
+      "post": {
+        "operationId": "addChecklistItem",
+        "description": "Ajoute un item dans une checklist existante d’une carte Trello.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addChecklistItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/checkChecklistItem": {
+      "post": {
+        "operationId": "checkChecklistItem",
+        "description": "Coche un item dans une checklist existante d’une carte Trello.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/checkChecklistItemRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/addLabel": {
+      "post": {
+        "operationId": "addLabel",
+        "description": "Ajoute un label existant (par nom ou couleur) sur une carte Trello.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/addLabelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/shiftDueDates": {
+      "post": {
+        "operationId": "shiftDueDates",
+        "description": "Décale les échéances de toutes les cartes d’une liste Trello (offset positif ou négatif en jours).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/shiftDueDatesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/listBoardLabels": {
+      "post": {
+        "operationId": "listBoardLabels",
+        "description": "Retourne tous les labels d’un board Trello (nom, couleur, id).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/listBoardLabelsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/listOverdueTasks": {
+      "post": {
+        "operationId": "listOverdueTasks",
+        "description": "Liste toutes les cartes en retard sur un board Trello.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/listOverdueTasksRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/sortListByDueDate": {
+      "post": {
+        "operationId": "sortListByDueDate",
+        "description": "Trie les cartes d’une liste Trello en fonction de leurs échéances.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/sortListByDueDateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/prioritizeList": {
+      "post": {
+        "operationId": "prioritizeList",
+        "description": "Réorganise une liste Trello selon un score d’urgence (échéances, labels critiques, etc.).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/prioritizeListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/groupCards": {
+      "post": {
+        "operationId": "groupCards",
+        "description": "Regroupe les cartes d’un board Trello selon un critère choisi (label, membre, échéance).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/groupCardsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/getBoardSnapshot": {
+      "post": {
+        "operationId": "getBoardSnapshot",
+        "description": "Retourne un snapshot complet du board (listes, cartes, labels, membres, checklists, stats).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getBoardSnapshotRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/analyzeBoardHealth": {
+      "post": {
+        "operationId": "analyzeBoardHealth",
+        "description": "Analyse un board Trello et identifie les problèmes (retards, absence de labels, tâches stagnantes, etc.).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/analyzeBoardHealthRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/auditList": {
+      "post": {
+        "operationId": "auditList",
+        "description": "Analyse une liste spécifique d’un board Trello et détecte les problèmes (retards, absence de labels, tâches stagnantes...).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/auditListRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/auditHistory": {
+      "post": {
+        "operationId": "auditHistory",
+        "description": "Analyse l'historique d'un board Trello (actions, pics, inactivité) et détecte les anomalies.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/auditHistoryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/generateBoardSummary": {
+      "post": {
+        "operationId": "generateBoardSummary",
+        "description": "Génère un résumé exécutif complet d’un board Trello (audit avancé, risques, recommandations).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/generateBoardSummaryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/assistant/suggestBoardCleanup": {
+      "post": {
+        "operationId": "suggestBoardCleanup",
+        "description": "Analyse un board pour générer un plan de nettoyage (archiver les cartes anciennes, ajouter des échéances, labels, checklists, rééquilibrer) sans rien modifier.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/suggestBoardCleanupRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {
+      "createTrelloTaskRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
+          },
+          "list_name": {
+            "type": "string",
+            "description": "Le nom de la liste dans laquelle créer la tâche. Par défaut: \"À faire\"."
+          },
+          "card_name": {
+            "type": "string",
+            "description": "Le titre de la tâche à créer. Obligatoire."
+          },
+          "due_date": {
+            "type": "string",
+            "description": "La date d'échéance au format ISO 8601 (ex: \"2026-01-31T00:00:00Z\"). Optionnel."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "createTrelloTask"
+          }
+        },
+        "required": [
+          "action",
+          "card_name"
+        ]
+      },
+      "completeTrelloTaskRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
+          },
+          "task_name": {
+            "type": "string",
+            "description": "Le nom exact de la tâche à marquer comme terminée. Obligatoire."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "completeTrelloTask"
+          }
+        },
+        "required": [
+          "action",
+          "task_name"
+        ]
+      },
+      "updateTrelloDueDateRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
+          },
+          "task_name": {
+            "type": "string",
+            "description": "Le nom exact de la tâche dont la date doit être modifiée. Obligatoire."
+          },
+          "due_date": {
+            "type": "string",
+            "description": "La nouvelle date d'échéance au format ISO 8601 (ex: \"2026-01-31T00:00:00Z\"). Obligatoire."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "updateTrelloDueDate"
+          }
+        },
+        "required": [
+          "action",
+          "task_name",
+          "due_date"
+        ]
+      },
+      "archiveTrelloTaskRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
+          },
+          "task_name": {
+            "type": "string",
+            "description": "Le nom exact de la tâche à archiver. Obligatoire."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "archiveTrelloTask"
+          }
+        },
+        "required": [
+          "action",
+          "task_name"
+        ]
+      },
+      "moveTrelloTaskRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Le nom ou l'ID du board Trello. Optionnel, utilise le board par défaut si non spécifié."
+          },
+          "task_name": {
+            "type": "string",
+            "description": "Le nom exact de la tâche à déplacer. Obligatoire."
+          },
+          "list_name": {
+            "type": "string",
+            "description": "Le nom de la liste de destination où déplacer la tâche. Obligatoire."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "moveTrelloTask"
+          }
+        },
+        "required": [
+          "action",
+          "task_name",
+          "list_name"
+        ]
+      },
+      "getBoardActionsRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board Trello (ex: 'Organisation', 'Prazo Espagne')."
+          },
+          "filter": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste des types d’actions Trello à filtrer (ex: 'createCard', 'updateCard', 'commentCard', 'moveCardToBoard'). Si non précisé, toutes les actions sont retournées."
+          },
+          "since": {
+            "type": "string",
+            "description": "Date/heure de début en ISO 8601 (ex: '2025-11-01T00:00:00Z')."
+          },
+          "before": {
+            "type": "string",
+            "description": "Date/heure de fin en ISO 8601."
+          },
+          "limit": {
+            "type": "number",
+            "description": "Nombre maximum d’actions à récupérer (ex: 50)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "getBoardActions"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "getCardActionsRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte Trello (ex: 'Budget Q1')."
+          },
+          "filter": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste des types d’actions à filtrer (ex: 'createCard', 'updateCard', 'commentCard')."
+          },
+          "since": {
+            "type": "string",
+            "description": "Date/heure de début en ISO 8601 (ex: '2025-11-01T00:00:00Z')."
+          },
+          "before": {
+            "type": "string",
+            "description": "Date/heure de fin en ISO 8601."
+          },
+          "limit": {
+            "type": "number",
+            "description": "Nombre maximum d’actions à récupérer (ex: 50)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "getCardActions"
+          }
+        },
+        "required": [
+          "action",
+          "card_name"
+        ]
+      },
+      "improveCardDescriptionRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte Trello dont la description doit être améliorée."
+          },
+          "instructions": {
+            "type": "string",
+            "description": "Consignes additionnelles (ton, structure, points à aborder). Optionnel."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "improveCardDescription"
+          }
+        },
+        "required": [
+          "action",
+          "card_name"
+        ]
+      },
+      "updateCardFieldRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte à modifier."
+          },
+          "field": {
+            "type": "string",
+            "description": "Nom du champ Trello à mettre à jour (ex: name, desc, due, pos)."
+          },
+          "value": {
+            "type": "string",
+            "description": "Nouvelle valeur à appliquer au champ."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "updateCardField"
+          }
+        },
+        "required": [
+          "action",
+          "card_name",
+          "field",
+          "value"
+        ]
+      },
+      "moveCardToListRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte à déplacer."
+          },
+          "list_name": {
+            "type": "string",
+            "description": "Nom de la liste destination (ex: 'En cours', 'Done')."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "moveCardToList"
+          }
+        },
+        "required": [
+          "action",
+          "card_name",
+          "list_name"
+        ]
+      },
+      "deleteCardRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte à supprimer."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "deleteCard"
+          }
+        },
+        "required": [
+          "action",
+          "card_name"
+        ]
+      },
+      "archiveCardRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte à archiver."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "archiveCard"
+          }
+        },
+        "required": [
+          "action",
+          "card_name"
+        ]
+      },
+      "createChecklistRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte sur laquelle créer la checklist."
+          },
+          "checklist_name": {
+            "type": "string",
+            "description": "Nom de la checklist (ex: 'Préparation lancement')."
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Liste d’items à ajouter à la checklist (optionnel)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "createChecklist"
+          }
+        },
+        "required": [
+          "action",
+          "card_name",
+          "checklist_name"
+        ]
+      },
+      "addChecklistItemRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte contenant la checklist."
+          },
+          "checklist_name": {
+            "type": "string",
+            "description": "Nom de la checklist cible."
+          },
+          "item_name": {
+            "type": "string",
+            "description": "Nom de l’item à ajouter."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "addChecklistItem"
+          }
+        },
+        "required": [
+          "action",
+          "card_name",
+          "checklist_name",
+          "item_name"
+        ]
+      },
+      "checkChecklistItemRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte contenant la checklist."
+          },
+          "checklist_name": {
+            "type": "string",
+            "description": "Nom de la checklist cible."
+          },
+          "item_name": {
+            "type": "string",
+            "description": "Nom de l’item à cocher."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "checkChecklistItem"
+          }
+        },
+        "required": [
+          "action",
+          "card_name",
+          "checklist_name",
+          "item_name"
+        ]
+      },
+      "addLabelRequest": {
+        "type": "object",
+        "properties": {
+          "card_name": {
+            "type": "string",
+            "description": "Nom exact de la carte à étiqueter."
+          },
+          "label_name_or_color": {
+            "type": "string",
+            "description": "Nom du label ou couleur (ex: \"Urgent\", \"red\"). Les labels doivent déjà exister sur le board."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "addLabel"
+          }
+        },
+        "required": [
+          "action",
+          "card_name",
+          "label_name_or_color"
+        ]
+      },
+      "shiftDueDatesRequest": {
+        "type": "object",
+        "properties": {
+          "list_name": {
+            "type": "string",
+            "description": "Nom de la liste dont les cartes doivent être décalées."
+          },
+          "days": {
+            "type": "number",
+            "description": "Nombre de jours à ajouter (positif) ou retirer (négatif) aux échéances existantes."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "shiftDueDates"
+          }
+        },
+        "required": [
+          "action",
+          "list_name",
+          "days"
+        ]
+      },
+      "listBoardLabelsRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom ou ID du board Trello."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "listBoardLabels"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "listOverdueTasksRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom ou ID du board à analyser."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "listOverdueTasks"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "sortListByDueDateRequest": {
+        "type": "object",
+        "properties": {
+          "list_name": {
+            "type": "string",
+            "description": "Nom de la liste à trier."
+          },
+          "order": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "Ordre de tri: asc (par défaut) ou desc."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "sortListByDueDate"
+          }
+        },
+        "required": [
+          "action",
+          "list_name"
+        ]
+      },
+      "prioritizeListRequest": {
+        "type": "object",
+        "properties": {
+          "list_name": {
+            "type": "string",
+            "description": "Nom de la liste à prioriser."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "prioritizeList"
+          }
+        },
+        "required": [
+          "action",
+          "list_name"
+        ]
+      },
+      "groupCardsRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom ou ID du board Trello."
+          },
+          "criteria": {
+            "type": "string",
+            "enum": [
+              "label",
+              "member",
+              "due"
+            ],
+            "description": "Critère utilisé pour regrouper les cartes."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "groupCards"
+          }
+        },
+        "required": [
+          "action",
+          "board_name",
+          "criteria"
+        ]
+      },
+      "getBoardSnapshotRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board Trello."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "getBoardSnapshot"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "analyzeBoardHealthRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board Trello."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "analyzeBoardHealth"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "auditListRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board Trello."
+          },
+          "list_name": {
+            "type": "string",
+            "description": "Nom de la liste à auditer."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "auditList"
+          }
+        },
+        "required": [
+          "action",
+          "board_name",
+          "list_name"
+        ]
+      },
+      "auditHistoryRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board à analyser."
+          },
+          "since": {
+            "type": "string",
+            "description": "Début de période ISO 8601 (optionnel)."
+          },
+          "before": {
+            "type": "string",
+            "description": "Fin de période ISO 8601 (optionnel)."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "auditHistory"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "generateBoardSummaryRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board à résumer."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "generateBoardSummary"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      },
+      "suggestBoardCleanupRequest": {
+        "type": "object",
+        "properties": {
+          "board_name": {
+            "type": "string",
+            "description": "Nom du board à analyser."
+          },
+          "action": {
+            "type": "string",
+            "description": "Nom de la fonction à exécuter (identique au champ 'name')",
+            "const": "suggestBoardCleanup"
+          }
+        },
+        "required": [
+          "action",
+          "board_name"
+        ]
+      }
+    }
   },
   "name": "trello-assistant",
   "x-oai-tools": [
